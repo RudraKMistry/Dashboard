@@ -14,6 +14,10 @@ export function usePWAInstall() {
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone === true;
 
+  const isIOS = 
+    /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
   useEffect(() => {
     const handler = (e) => {
       e.preventDefault();
@@ -47,5 +51,5 @@ export function usePWAInstall() {
     return { outcome };
   };
 
-  return { isInstallable, isInstalled, promptInstall };
+  return { isInstallable, isInstalled, isIOS, promptInstall };
 }

@@ -7,7 +7,7 @@ import './SettingsPage.css';
 export default function SettingsPage() {
   const { settings, updateSettings } = useSettings();
   const { changePassword } = useAuth();
-  const { isInstallable, isInstalled, promptInstall } = usePWAInstall();
+  const { isInstallable, isInstalled, isIOS, promptInstall } = usePWAInstall();
   
   const [name, setName] = useState(settings.name || '');
   const [pomodoroWork, setPomodoroWork] = useState(settings.pomodoroWork || 25);
@@ -447,7 +447,11 @@ export default function SettingsPage() {
                 }
                 const { outcome } = await promptInstall();
                 if (outcome === 'not-available') {
-                  setInstallMsg({ text: '⚠️ Your browser doesn\'t support PWA install. Try Chrome or Edge on desktop/Android.', type: 'warn' });
+                  if (isIOS) {
+                    setInstallMsg({ text: '🍏 On iOS Safari, tap the Share icon at the bottom, then scroll down and tap "Add to Home Screen".', type: 'warn' });
+                  } else {
+                    setInstallMsg({ text: '⚠️ Your browser doesn\'t support PWA install. Try Chrome or Edge on desktop/Android.', type: 'warn' });
+                  }
                 } else if (outcome === 'accepted') {
                   setInstallMsg({ text: '🎉 App installed successfully!', type: 'success' });
                 } else {

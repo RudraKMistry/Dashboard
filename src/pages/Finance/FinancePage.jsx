@@ -288,7 +288,7 @@ export default function FinancePage() {
             <div className="budget-grid">
               {currentBudgets.map(budget => {
                 const spent = categoryBreakdown[budget.category] || 0;
-                const pct = percentage(spent, budget.limitAmount);
+                const pct = percentage(spent, budget.amount);
                 const cat = EXPENSE_CATEGORIES.find(c => c.id === budget.category || c.name === budget.category);
                 return (
                   <div key={budget.id} className="glass-card budget-card interactive">
@@ -304,7 +304,7 @@ export default function FinancePage() {
                       <span className={pct >= 90 ? 'text-red' : pct >= 70 ? 'text-orange' : 'text-green'}>
                         {formatCurrency(spent)}
                       </span>
-                      <span className="text-muted"> / {formatCurrency(budget.limitAmount)}</span>
+                      <span className="text-muted"> / {formatCurrency(budget.amount)}</span>
                     </div>
                     <div className="progress-container">
                       <div className={`progress-bar ${getProgressColor(pct)}`} style={{ width: `${pct}%` }} />
@@ -696,7 +696,7 @@ function AddFinanceModal({ isOpen, onClose, type, onAddTransaction, onAddBudget,
         }
         break;
       case 'budget':
-        if (formData.category && formData.limitAmount) {
+        if (formData.category && formData.amount) {
           onAddBudget(formData);
           onClose();
           setFormData({});
@@ -799,7 +799,7 @@ function AddFinanceModal({ isOpen, onClose, type, onAddTransaction, onAddBudget,
           </div>
           <div className="input-group">
             <label className="input-label">Monthly Limit (₹)</label>
-            <input type="number" className="input-field" placeholder="0" value={formData.limitAmount || ''} onChange={(e) => updateField('limitAmount', e.target.value)} />
+            <input type="number" className="input-field" placeholder="0" value={formData.amount || ''} onChange={(e) => updateField('amount', e.target.value)} />
           </div>
         </>
       )}

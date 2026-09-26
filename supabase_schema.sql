@@ -46,6 +46,7 @@ CREATE TABLE savings_goals (
     target_amount NUMERIC NOT NULL,
     current_amount NUMERIC NOT NULL DEFAULT 0,
     deadline DATE,
+    color TEXT DEFAULT '#6C63FF',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE
 );

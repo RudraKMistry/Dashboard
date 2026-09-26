@@ -48,6 +48,9 @@ function useCollection(collectionName) {
       setItems(prev => [...prev, camelItem]);
       return camelItem;
     }
+    if (error) {
+      console.error(`Error adding to ${collectionName}:`, error);
+    }
     return null;
   }, [collectionName, user]);
 
@@ -67,6 +70,9 @@ function useCollection(collectionName) {
       const camelItem = keysToCamel(updated);
       setItems(prev => prev.map(item => item.id === id ? camelItem : item));
       return camelItem;
+    }
+    if (error) {
+      console.error(`Error updating in ${collectionName}:`, error);
     }
     return null;
   }, [collectionName, user]);
@@ -171,7 +177,7 @@ export function useBudgets() {
 
   const addBudget = (data) => addItem({
     category: data.category,
-    limitAmount: parseFloat(data.limitAmount),
+    amount: parseFloat(data.amount),
     month: data.month || getCurrentMonth(),
   });
 

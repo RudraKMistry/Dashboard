@@ -1,0 +1,290 @@
+/* ── Tasks Page ──────────────────────────── */
+.tasks-page { max-width: 1200px; }
+
+/* ── Task List ────────────────────────────── */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  transition: all var(--transition-base);
+}
+
+.task-item:hover {
+  transform: translateX(6px);
+}
+
+.task-item.done {
+  opacity: 0.5;
+}
+
+.task-item.done .task-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-weight: var(--font-weight-medium);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.task-due {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* ── Kanban ───────────────────────────────── */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  min-height: 500px;
+}
+
+.kanban-column {
+  background: var(--glass-bg-hover);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  transition: all var(--transition-fast);
+  min-height: 400px;
+}
+
+.kanban-column.drag-over {
+  background: rgba(108, 99, 255, 0.08);
+  border-color: var(--accent-primary);
+  box-shadow: inset 0 0 20px var(--accent-primary-glow);
+}
+
+.kanban-column-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-md);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.kanban-column-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.kanban-column-title {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  flex: 1;
+}
+
+.kanban-column-count {
+  background: var(--glass-border-hover);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.kanban-column-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.kanban-card {
+  padding: var(--space-md);
+  cursor: grab;
+  transition: all var(--transition-fast);
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card.dragging {
+  opacity: 0.4;
+  transform: rotate(2deg);
+}
+
+.kanban-card-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.kanban-card-meta {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.kanban-card-due {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+  display: block;
+}
+
+/* ── Pomodoro ─────────────────────────────── */
+.pomodoro-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.pomodoro-card {
+  padding: var(--space-2xl);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.pomodoro-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.pomodoro-mode {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.pomodoro-mode.work {
+  color: var(--accent-primary-light);
+}
+
+.pomodoro-mode.break {
+  color: var(--accent-green);
+}
+
+.pomodoro-sessions {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.pomodoro-timer {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 0 auto var(--space-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pomodoro-ring {
+  width: 260px;
+  height: 260px;
+  position: absolute;
+}
+
+.pomodoro-time-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.pomodoro-time {
+  font-size: 3.5rem;
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: -2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pomodoro-time-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.pomodoro-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.pomodoro-play {
+  width: 140px;
+}
+
+.pomodoro-settings {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.pomo-setting {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.pomo-setting .input-field {
+  width: 60px;
+  text-align: center;
+  padding: 6px;
+}
+
+.pomo-setting label {
+  font-weight: var(--font-weight-medium);
+}
+
+.pomodoro-task-select {
+  text-align: left;
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .kanban-column {
+    min-height: auto;
+  }
+
+  .pomodoro-timer {
+    width: 200px;
+    height: 200px;
+  }
+
+  .pomodoro-ring {
+    width: 200px;
+    height: 200px;
+  }
+
+  .pomodoro-time {
+    font-size: 2.5rem;
+  }
+
+  .pomodoro-card {
+    padding: var(--space-lg);
+  }
+}

@@ -1,0 +1,237 @@
+.habits-page { max-width: 900px; }
+
+.habits-summary {
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.habits-summary-ring {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.habits-summary-ring-text {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+}
+
+.ring-count {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.ring-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.habits-summary-info h3 {
+  margin-bottom: var(--space-xs);
+}
+
+/* ── Habits List ──────────────────────────── */
+.habits-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.habit-card {
+  padding: var(--space-md) var(--space-lg);
+}
+
+.habit-card.completed {
+  border-color: rgba(0, 229, 160, 0.2);
+}
+
+.habit-card-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.habit-check-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: white;
+  font-weight: bold;
+}
+
+.habit-check-btn:hover {
+  transform: scale(1.1);
+}
+
+.habit-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.habit-name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: 2px;
+}
+
+.habit-emoji {
+  font-size: 1.2rem;
+}
+
+.habit-name {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.habit-quantity {
+  margin-top: 4px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.qty-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--glass-border-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.qty-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.qty-value {
+  font-weight: var(--font-weight-bold);
+  min-width: 20px;
+  text-align: center;
+}
+
+.qty-target {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.habit-streak {
+  margin-right: var(--space-sm);
+}
+
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  animation: streakPulse 2s ease infinite;
+}
+
+/* ── 7-day dots ───────────────────────────── */
+.habit-week {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  justify-content: flex-end;
+}
+
+.habit-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.habit-day-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.habit-day-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--glass-border);
+  transition: all var(--transition-fast);
+}
+
+.habit-day-dot.today {
+  border: 2px solid var(--accent-primary);
+}
+
+.habit-day-dot.filled {
+  transform: scale(1.1);
+}
+
+/* ── Preset Grid ──────────────────────────── */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+.preset-habit-btn {
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  text-align: left;
+  font-family: inherit;
+}
+
+.preset-habit-btn:hover {
+  border-color: var(--accent-primary);
+  background: rgba(108, 99, 255, 0.1);
+}
+
+.preset-emoji {
+  font-size: 1.3rem;
+}
+
+.preset-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .habits-summary {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .habit-week {
+    justify-content: center;
+  }
+}

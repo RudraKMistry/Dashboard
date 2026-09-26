@@ -15,60 +15,74 @@ export default function Layout() {
   // Theme initialized in App.jsx
 
   useEffect(() => {
+    // Helper: mark all cards currently in/near viewport as in-view
+    const revealVisible = () => {
+      document.querySelectorAll('.glass-card:not(.in-view)').forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 150 && rect.bottom > -150) {
+          card.classList.add('in-view');
+        }
+      });
+    };
+
     if (!settings.scrollAnimationsEnabled) {
       document.querySelectorAll('.glass-card').forEach(card => card.classList.add('in-view'));
       return;
     }
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          // Only ADD in-view, never remove it — cards stay visible once seen
           if (entry.isIntersecting) {
             entry.target.classList.add('in-view');
-          } else {
-            entry.target.classList.remove('in-view');
           }
         });
       },
-      { threshold: 0.01, rootMargin: '50px' }
+      { threshold: 0.01, rootMargin: '150px 0px' }
     );
 
-    const cards = document.querySelectorAll('.glass-card');
-    cards.forEach((card) => observer.observe(card));
-    
-    const timer = setTimeout(() => {
-      document.querySelectorAll('.glass-card:not(.in-view)').forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          card.classList.add('in-view');
-        }
-      });
-    }, 1000);
+    const observeAllCards = () => {
+      document.querySelectorAll('.glass-card').forEach((card) => observer.observe(card));
+      revealVisible();
+    };
 
+    // Wait for framer-motion page transition (250ms) to finish before observing
+    const t1 = setTimeout(observeAllCards, 350);
+    // Backup timers for late-rendering cards (e.g. after Supabase data loads)
+    const t2 = setTimeout(observeAllCards, 700);
+    const t3 = setTimeout(observeAllCards, 1500);
+
+    // Watch for dynamically added cards
     const mutationObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
           if (node.nodeType === 1) {
-            if (node.classList.contains('glass-card')) {
+            if (node.classList && node.classList.contains('glass-card')) {
               observer.observe(node);
+              revealVisible();
             }
             if (node.querySelectorAll) {
-              const childCards = node.querySelectorAll('.glass-card');
-              childCards.forEach((card) => observer.observe(card));
+              node.querySelectorAll('.glass-card').forEach((card) => {
+                observer.observe(card);
+              });
+              revealVisible();
             }
           }
         });
       });
     });
-    
+
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       observer.disconnect();
       mutationObserver.disconnect();
-      clearTimeout(timer);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
     };
-  }, [location.pathname]);
+  }, [location.pathname, settings.scrollAnimationsEnabled]);
 
   return (
     <div className="app-layout">

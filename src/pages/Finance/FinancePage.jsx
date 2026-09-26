@@ -26,7 +26,7 @@ export default function FinancePage() {
   const { budgets, addBudget, removeBudget, getCurrentBudgets } = useBudgets();
   const { goals, addGoal, updateGoal, removeGoal, addContribution } = useSavingsGoals();
   const { subscriptions, addSubscription, removeSubscription, toggleActive, getActiveSubs, getTotalMonthly, updateSubscription } = useSubscriptions();
-  const { monthlyGoals, setMonthlyGoal, getMonthlyGoal } = useMonthlyEarningGoals();
+  const { monthlyGoals, setMonthlyGoal, getMonthlyGoal, removeMonthlyGoal } = useMonthlyEarningGoals();
 
   const currentMonthlyGoal = getMonthlyGoal(selectedMonth);
   const currentMonthGoals = useMemo(() => {
@@ -445,7 +445,14 @@ export default function FinancePage() {
           
           {monthlyGoalStats && (
             <div className="glass-card mb-4" style={{ marginBottom: '24px' }}>
-              <h4>Monthly Earning Goal ({selectedMonth})</h4>
+              <div className="d-flex align-items-center justify-content-between">
+                <h4>Monthly Earning Goal ({selectedMonth})</h4>
+                {currentMonthlyGoal && (
+                  <button className="btn btn-icon btn-sm btn-ghost" onClick={() => removeMonthlyGoal(currentMonthlyGoal.id)}>
+                    <HiTrash />
+                  </button>
+                )}
+              </div>
               <div className="finance-summary" style={{ marginTop: '16px', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                 <div className="finance-summary-card" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '16px', margin: 0 }}>
                   <span className="summary-label">Target</span>

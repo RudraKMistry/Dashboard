@@ -1,4 +1,5 @@
 -- Secure Supabase Schema with User Authentication
+-- Designed to perfectly match the React frontend hooks (useData.js)
 
 -- Drop existing tables to start fresh
 DROP TABLE IF EXISTS habit_logs CASCADE;
@@ -57,8 +58,9 @@ CREATE TABLE subscriptions (
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     name TEXT NOT NULL,
     amount NUMERIC NOT NULL,
-    billing_cycle TEXT NOT NULL CHECK (billing_cycle IN ('monthly', 'yearly')),
-    next_billing_date DATE NOT NULL,
+    billing_date INTEGER NOT NULL,
+    category TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE
 );
@@ -78,7 +80,9 @@ CREATE TABLE daily_earning_goals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     date DATE NOT NULL,
-    target_amount NUMERIC NOT NULL,
+    target_amount NUMERIC NOT NULL DEFAULT 0,
+    achieved_amount NUMERIC NOT NULL DEFAULT 0,
+    note TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE
 );
@@ -91,12 +95,11 @@ CREATE TABLE tasks (
     description TEXT,
     category TEXT,
     due_date DATE,
-    status TEXT NOT NULL CHECK (status IN ('todo', 'in-progress', 'done')),
-    priority TEXT NOT NULL CHECK (priority IN ('low', 'medium', 'high')),
-    estimated_pomodoros INTEGER DEFAULT 1,
-    actual_pomodoros INTEGER DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'todo',
+    priority TEXT NOT NULL DEFAULT 'medium',
     is_recurring BOOLEAN DEFAULT FALSE,
-    recurrence_pattern TEXT,
+    recurrence_rule TEXT,
+    completed_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE
 );
@@ -106,13 +109,12 @@ CREATE TABLE habits (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     name TEXT NOT NULL,
-    icon TEXT,
-    type TEXT NOT NULL CHECK (type IN ('binary', 'quantitative')),
-    target_value INTEGER,
+    emoji TEXT,
+    color TEXT,
+    type TEXT NOT NULL,
+    target INTEGER,
     unit TEXT,
     frequency TEXT NOT NULL,
-    current_streak INTEGER DEFAULT 0,
-    longest_streak INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE
 );
@@ -123,8 +125,7 @@ CREATE TABLE habit_logs (
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     habit_id UUID REFERENCES habits(id) ON DELETE CASCADE,
     date DATE NOT NULL,
-    completed BOOLEAN DEFAULT FALSE,
-    value INTEGER,
+    value INTEGER DEFAULT 1,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE,
     UNIQUE(habit_id, date)
@@ -134,10 +135,7 @@ CREATE TABLE habit_logs (
 CREATE TABLE routine_templates (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-    title TEXT NOT NULL,
-    time_block TEXT NOT NULL CHECK (time_block IN ('morning', 'afternoon', 'evening', 'night')),
-    order_index INTEGER DEFAULT 0,
-    is_active BOOLEAN DEFAULT TRUE,
+    blocks JSONB NOT NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE
 );
@@ -146,12 +144,12 @@ CREATE TABLE routine_templates (
 CREATE TABLE routine_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-    routine_id UUID REFERENCES routine_templates(id) ON DELETE CASCADE,
+    block_id TEXT NOT NULL,
+    item_id TEXT NOT NULL,
     date DATE NOT NULL,
-    completed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE,
-    UNIQUE(routine_id, date)
+    UNIQUE(user_id, block_id, item_id, date)
 );
 
 -- 12. Notes / Journal
@@ -159,8 +157,10 @@ CREATE TABLE notes (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     date DATE NOT NULL,
+    title TEXT,
     content TEXT,
     mood TEXT,
+    tags TEXT[] DEFAULT '{}',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE,
     UNIQUE(user_id, date)
@@ -180,7 +180,7 @@ ALTER TABLE routine_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE routine_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
 
--- Secure Policies: Users can only select, insert, update, and delete THEIR OWN rows
+-- Secure Policies: Users can only manage their own rows
 CREATE POLICY "Users can manage their own transactions" ON transactions FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Users can manage their own budgets" ON budgets FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Users can manage their own savings_goals" ON savings_goals FOR ALL USING (auth.uid() = user_id);
@@ -193,3 +193,8 @@ CREATE POLICY "Users can manage their own habit_logs" ON habit_logs FOR ALL USIN
 CREATE POLICY "Users can manage their own routine_templates" ON routine_templates FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Users can manage their own routine_logs" ON routine_logs FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Users can manage their own notes" ON notes FOR ALL USING (auth.uid() = user_id);
+
+-- CRITICAL: Grant permissions to anonymous and authenticated users so the API can read/write
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated;

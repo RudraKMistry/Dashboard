@@ -132,7 +132,7 @@ export default function FinancePage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="finance-summary stagger-children">
+      <div className="finance-summary">
         <div className="glass-card finance-summary-card">
           <span className="summary-label">Monthly Income</span>
           <span className="summary-value text-green"><AnimatedNumber value={monthSummary.income} format={formatCurrency} /></span>
@@ -160,7 +160,7 @@ export default function FinancePage() {
             🔔 Pending Subscriptions
           </h4>
           <p className="text-muted" style={{ marginBottom: '16px' }}>These subscriptions are due. Log them to keep your balance accurate.</p>
-          <div className="stagger-children" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {pendingSubscriptions.map(sub => (
               <div key={sub.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
                 <div>
@@ -285,7 +285,7 @@ export default function FinancePage() {
               </button>
             </div>
           ) : (
-            <div className="budget-grid stagger-children">
+            <div className="budget-grid">
               {currentBudgets.map(budget => {
                 const spent = categoryBreakdown[budget.category] || 0;
                 const pct = percentage(spent, budget.limitAmount);
@@ -336,7 +336,7 @@ export default function FinancePage() {
               </button>
             </div>
           ) : (
-            <div className="goals-grid stagger-children">
+            <div className="goals-grid">
               {goals.map(goal => {
                 const pct = percentage(goal.currentAmount, goal.targetAmount);
                 return (
@@ -446,7 +446,7 @@ export default function FinancePage() {
           {monthlyGoalStats && (
             <div className="glass-card mb-4" style={{ marginBottom: '24px' }}>
               <h4>Monthly Earning Goal ({selectedMonth})</h4>
-              <div className="finance-summary stagger-children" style={{ marginTop: '16px', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+              <div className="finance-summary" style={{ marginTop: '16px', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                 <div className="finance-summary-card" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '16px', margin: 0 }}>
                   <span className="summary-label">Target</span>
                   <span className="summary-value text-blue">{formatCurrency(monthlyGoalStats.target)}</span>

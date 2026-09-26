@@ -52,7 +52,7 @@ export default function HomePage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="stats-grid stagger-children">
+      <div className="stats-grid">
         <div className="glass-card stat-card">
           <div className="stat-icon" style={{ background: 'rgba(0, 229, 160, 0.15)' }}>
             <HiTrendingUp style={{ color: 'var(--accent-green)' }} />

@@ -83,7 +83,7 @@ export default function HabitsPage() {
           </button>
         </div>
       ) : (
-        <div className="habits-list stagger-children">
+        <div className="habits-list">
           {habits.map(habit => {
             const streak = getStreak(habit.id);
             const completed = isCompletedToday(habit.id);

@@ -104,7 +104,7 @@ export default function RoutinePage() {
       </div>
 
       {/* Routine Blocks */}
-      <div className="routine-blocks stagger-children">
+      <div className="routine-blocks">
         {blockOrder.map(blockId => {
           const block = routineData[blockId];
           if (!block) return null;

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useSettings } from '../../hooks/useData';
 import { useAuth } from '../../context/AuthContext';
+import { usePWAInstall } from '../../hooks/usePWAInstall';
 import './SettingsPage.css';
 
 export default function SettingsPage() {
   const { settings, updateSettings } = useSettings();
   const { changePassword } = useAuth();
+  const { isInstallable, isInstalled, promptInstall } = usePWAInstall();
   
   const [name, setName] = useState(settings.name || '');
   const [pomodoroWork, setPomodoroWork] = useState(settings.pomodoroWork || 25);
@@ -33,6 +35,7 @@ export default function SettingsPage() {
   
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [installMsg, setInstallMsg] = useState({ text: '', type: '' });
   const [passwordMsg, setPasswordMsg] = useState({ text: '', type: '' });
   const [saveStatus, setSaveStatus] = useState('');
 
@@ -418,6 +421,50 @@ export default function SettingsPage() {
               Update Password
             </button>
           </form>
+        </div>
+
+        {/* Install App */}
+        <div className="glass-card settings-section install-section">
+          <h3>📲 Install App</h3>
+          <p className="text-muted" style={{ fontSize: 'var(--font-size-sm)' }}>
+            Install this dashboard as a native app on your device for a faster, fullscreen experience — no browser UI in the way.
+          </p>
+
+          <div className="install-cta">
+            <div className="install-badges">
+              <span className="install-badge">🖥️ Desktop</span>
+              <span className="install-badge">📱 Mobile</span>
+              <span className="install-badge">⚡ Offline ready</span>
+            </div>
+
+            <button
+              id="pwa-install-btn"
+              className={`btn btn-primary install-btn ${isInstalled ? 'install-btn--installed' : ''}`}
+              onClick={async () => {
+                if (isInstalled) {
+                  setInstallMsg({ text: '✅ App is already installed on your device!', type: 'success' });
+                  return;
+                }
+                const { outcome } = await promptInstall();
+                if (outcome === 'not-available') {
+                  setInstallMsg({ text: '⚠️ Your browser doesn\'t support PWA install. Try Chrome or Edge on desktop/Android.', type: 'warn' });
+                } else if (outcome === 'accepted') {
+                  setInstallMsg({ text: '🎉 App installed successfully!', type: 'success' });
+                } else {
+                  setInstallMsg({ text: '', type: '' });
+                }
+              }}
+            >
+              {isInstalled ? '✅ Already Installed' : isInstallable ? '⬇️ Install App' : '⬇️ Install App'}
+            </button>
+          </div>
+
+          {installMsg.text && (
+            <p className={`password-msg ${installMsg.type === 'warn' ? 'error' : installMsg.type}`}
+               style={{ marginTop: 0 }}>
+              {installMsg.text}
+            </p>
+          )}
         </div>
       </div>
     </div>

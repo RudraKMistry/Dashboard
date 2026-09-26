@@ -62,3 +62,54 @@
 
 .password-msg.success { color: var(--accent-green); }
 .password-msg.error { color: var(--accent-red); }
+
+/* Install App section */
+.install-section {
+  border-color: rgba(99, 179, 237, 0.25);
+  background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(99, 179, 237, 0.04) 100%);
+}
+
+.install-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.install-badges {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.install-badge {
+  font-size: var(--font-size-xs);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--glass-bg-hover);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.install-btn {
+  min-width: 150px;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.install-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 179, 237, 0.3);
+}
+
+.install-btn--installed {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.install-btn--installed:hover {
+  transform: none;
+  box-shadow: none;
+}
